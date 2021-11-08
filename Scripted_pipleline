@@ -1,0 +1,29 @@
+node {
+
+    stage ('git'){
+        git branch: '2.1-master', credentialsId: 'githubrepo', url: 'https://github.com/venkatareddychinnapareddy/thymeleafexamples-petclinic.git'
+    }
+     
+    stage ('compile'){
+        sh 'mvn compile'
+    }
+   
+    stage ('test'){
+        sh 'mvn test'
+    }
+    
+    stage ('package'){
+        sh 'mvn package'
+    }
+    
+    stage('Publish'){
+        
+        junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'
+    }
+    
+    stage('Deploy'){
+          
+        'sh cp -f /var/lib/jenkins/workspace/VenkatReddy_Scripted_Pipeline/target/petclinic.war /opt/apache-tomcat-8.0.52/webapps'
+    } 
+    
+}
